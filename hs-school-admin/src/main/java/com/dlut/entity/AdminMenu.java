@@ -1,13 +1,23 @@
 package com.dlut.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+/**
+ * stream流map方法报错：不存在类型变量R的实例，使void符合R
+ * 原因：正常情况，set方法返回void
+ * @Accessors(chain = true)注解使set方法返回当前对象
+ */
+@Accessors(chain = true)
 public class AdminMenu {
 
     /** 菜单id */
@@ -34,5 +44,8 @@ public class AdminMenu {
     
     /** 菜单图标 */
     private String icon;
+
+    @TableField(exist = false)
+    private List<AdminMenu> children;
     
 }

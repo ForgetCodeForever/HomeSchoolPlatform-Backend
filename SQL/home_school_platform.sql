@@ -167,10 +167,10 @@ create table admin_menu (
 ) engine=innodb comment = '后台系统菜单表';
 
 insert into admin_menu values
-(1, '内容管理', 0, 'content', null,            'P', null,          '#'),
-(2, '建议管理', 0, 'advice',  'advice/Advice', 'P', 'advice:list', '#'),
-(3, '学生管理', 0, 'student', null,            'P', null,          '#'),
-(4, '成员管理', 0, 'user',    'user/User',     'P', 'user:list',   '#'),
+(1, '内容管理', 0, 'content', null,            'P', null,          'iconfont icon-content'),
+(2, '建议管理', 0, 'advice',  'advice/Advice', 'P', 'advice:list', 'iconfont icon-advice'),
+(3, '学生管理', 0, 'student', null,            'P', null,          'iconfont icon-ic_student'),
+(4, '成员管理', 0, 'user',    'user/User',     'P', 'user:list',   'iconfont icon-member'),
 -- ===========================================================================================================
 (10, '事记管理',    1, 'memorabilia', 'content/memorabilia/Memorabilia', 'C', 'content:memorabilia:list', '#'),
 (11, '书院之星管理', 1, 'star',        'content/star/Star',               'C', 'content:star:list',        '#'),

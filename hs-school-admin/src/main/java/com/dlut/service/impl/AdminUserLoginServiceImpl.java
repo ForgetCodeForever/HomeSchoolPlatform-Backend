@@ -8,6 +8,7 @@ import com.dlut.constants.SystemConstants;
 import com.dlut.dto.UserInfoDto;
 import com.dlut.entity.AdminUser;
 import com.dlut.enums.AppHttpCodeEnum;
+import com.dlut.enums.SuccessHttpMessageEnum;
 import com.dlut.exception.SystemException;
 import com.dlut.mapper.AdminUserMapper;
 import com.dlut.service.AdminUserLoginService;
@@ -23,18 +24,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class AdminUserLoginLoginServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser> implements AdminUserLoginService {
+public class AdminUserLoginServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser> implements AdminUserLoginService {
 
     private final AdminUserMapper adminUserMapper;
     private final StringRedisTemplate stringRedisTemplate;
 
-    public AdminUserLoginLoginServiceImpl(AdminUserMapper adminUserMapper, StringRedisTemplate stringRedisTemplate) {
+    public AdminUserLoginServiceImpl(AdminUserMapper adminUserMapper, StringRedisTemplate stringRedisTemplate) {
         this.adminUserMapper = adminUserMapper;
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
-    public ResponseResult<?> login(AdminUser adminUser) {
+    public ResponseResult<LoginVo> login(AdminUser adminUser) {
         // 1.对数据进行非空判断
         if (!StringUtils.hasText(adminUser.getUsername())) {
             throw new SystemException(AppHttpCodeEnum.USERNAME_NOT_NULL);
@@ -69,7 +70,8 @@ public class AdminUserLoginLoginServiceImpl extends ServiceImpl<AdminUserMapper,
         String token = JwtUtils.generateToken(claims);
 
         // 4.将token存入redis，并设置过期时间
-        String adminTokenKey = RedisConstants.LOGIN_TOKEN_ADMIN + adminUser.getAdminId();
+        /** 改Bug：adminUser是用户输入的信息，没有adminId */
+        String adminTokenKey = RedisConstants.LOGIN_TOKEN_ADMIN + dbUser.getAdminId();
         stringRedisTemplate.opsForValue().set(adminTokenKey, token);
         stringRedisTemplate.expire(adminTokenKey, RedisConstants.LOGIN_TOKEN_TTL, TimeUnit.MINUTES);
 
@@ -77,6 +79,7 @@ public class AdminUserLoginLoginServiceImpl extends ServiceImpl<AdminUserMapper,
         UserInfoDto userInfoDto = new UserInfoDto(adminId, adminName, roleName);
         LoginVo loginVo = new LoginVo(token, userInfoDto);
 
-        return ResponseResult.okResult(SystemConstants.SUCCESS, "登录成功", loginVo);
+        return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.LOGIN.getMsg(), loginVo);
     }
+
 }
