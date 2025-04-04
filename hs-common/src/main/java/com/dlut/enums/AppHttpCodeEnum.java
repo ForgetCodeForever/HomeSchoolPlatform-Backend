@@ -10,7 +10,11 @@ public enum AppHttpCodeEnum {
     USERNAME_NOT_NULL(600, "用户名不能为空"),
     PASSWORD_NOT_NULL(601, "密码不能为空"),
     USER_NOT_EXISTS(602, "用户不存在"),
-    PASSWORD_NOT_CORRECT(603, "密码错误");
+    PASSWORD_NOT_CORRECT(603, "密码错误"),
+    /** 事记管理 */
+    MEMORABILIA_TOO_LONG(603, "大事记内容不能多于200字"),
+
+    ;
 
     final int code;
     final String msg;

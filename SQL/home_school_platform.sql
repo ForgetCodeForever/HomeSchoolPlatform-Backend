@@ -287,7 +287,7 @@ insert into major_info values
  */
 create table memorabilia_info (
     memorabilia_id         bigint(20)      not null auto_increment    comment '大事记id',
-    memorabilia_time       datetime        not null                   comment '大事记时间',
+    memorabilia_time       date            not null                   comment '大事记时间',
     memorabilia_content    varchar(200)    default ''                 comment '大事记内容',
     academy_name           varchar(20)     not null                   comment '大事记所属书院',
     primary key (memorabilia_id)

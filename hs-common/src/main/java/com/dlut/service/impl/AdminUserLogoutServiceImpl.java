@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dlut.ResponseResult;
 import com.dlut.constants.RedisConstants;
 import com.dlut.constants.SystemConstants;
-import com.dlut.dto.UserInfoDto;
+import com.dlut.dto.AdminInfoDto;
 import com.dlut.entity.AdminUser;
 import com.dlut.enums.SuccessHttpMessageEnum;
 import com.dlut.mapper.AdminUserMapper;
@@ -25,8 +25,8 @@ public class AdminUserLogoutServiceImpl extends ServiceImpl<AdminUserMapper, Adm
     @Override
     public ResponseResult<?> logout() {
         // 删除redis中的token信息
-        UserInfoDto user = UserThreadLocalUtil.getUser();
-        String adminTokenKey = RedisConstants.LOGIN_TOKEN_ADMIN + user.getUserId();
+        AdminInfoDto user = UserThreadLocalUtil.getUser();
+        String adminTokenKey = RedisConstants.LOGIN_TOKEN_ADMIN + user.getAdminId();
         stringRedisTemplate.delete(adminTokenKey);
         return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.LOGOUT.getMsg());
     }

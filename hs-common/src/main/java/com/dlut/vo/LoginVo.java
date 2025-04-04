@@ -1,6 +1,6 @@
 package com.dlut.vo;
 
-import com.dlut.dto.UserInfoDto;
+import com.dlut.dto.AdminInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class LoginVo {
 
     private String token;
-    private UserInfoDto userInfoDto;
+    private AdminInfoDto adminInfoDto;
 
 }

@@ -4,8 +4,9 @@ public class SystemConstants {
 
     public static final int SUCCESS = 200;
 
-    public static final String USER_ID = "userId";
-    public static final String USER_NAME = "userName";
+    public static final String USER_ID = "adminId";
+    public static final String USER_NAME = "adminName";
     public static final String ROLE_NAME = "roleName";
+    public static final String ACADEMY_NAME = "academyName";
 
 }

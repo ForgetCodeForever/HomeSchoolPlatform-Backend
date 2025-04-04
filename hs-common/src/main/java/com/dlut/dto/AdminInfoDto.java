@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 // jwt载荷中自带iat和exp字段，而java类中没有相应字段，jackson转换时会抛unknown异常
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserInfoDto {
+public class AdminInfoDto {
 
-    private Long userId;      // 用户id
-    private String userName;  // 用户名
+    private Long adminId;      // 用户id
+    private String adminName;  // 用户名
     private String roleName;  // 角色名
+    private String academyName; // 书院名
 
 }

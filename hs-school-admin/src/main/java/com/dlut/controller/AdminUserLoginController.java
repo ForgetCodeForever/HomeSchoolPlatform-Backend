@@ -53,7 +53,7 @@ public class AdminUserLoginController {
 
     @GetMapping("/getMenuTree")
     public ResponseResult<?> getMenuTree() {
-        Long userId = UserThreadLocalUtil.getUser().getUserId();
+        Long userId = UserThreadLocalUtil.getUser().getAdminId();
         List<AdminMenu> menuTree = adminMenuService.selectMenuTreeByUserId(userId);
         return ResponseResult.okResult(menuTree);
     }

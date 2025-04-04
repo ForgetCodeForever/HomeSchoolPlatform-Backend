@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dlut.ResponseResult;
 import com.dlut.constants.RedisConstants;
 import com.dlut.constants.SystemConstants;
-import com.dlut.dto.UserInfoDto;
+import com.dlut.dto.AdminInfoDto;
+import com.dlut.entity.AcademyInfo;
 import com.dlut.entity.AdminUser;
 import com.dlut.enums.AppHttpCodeEnum;
 import com.dlut.enums.SuccessHttpMessageEnum;
 import com.dlut.exception.SystemException;
+import com.dlut.mapper.AcademyInfoMapper;
 import com.dlut.mapper.AdminUserMapper;
 import com.dlut.service.AdminUserLoginService;
 import com.dlut.utils.JwtUtils;
@@ -28,10 +30,12 @@ public class AdminUserLoginServiceImpl extends ServiceImpl<AdminUserMapper, Admi
 
     private final AdminUserMapper adminUserMapper;
     private final StringRedisTemplate stringRedisTemplate;
+    private final AcademyInfoMapper academyInfoMapper;
 
-    public AdminUserLoginServiceImpl(AdminUserMapper adminUserMapper, StringRedisTemplate stringRedisTemplate) {
+    public AdminUserLoginServiceImpl(AdminUserMapper adminUserMapper, StringRedisTemplate stringRedisTemplate, AcademyInfoMapper academyInfoMapper) {
         this.adminUserMapper = adminUserMapper;
         this.stringRedisTemplate = stringRedisTemplate;
+        this.academyInfoMapper = academyInfoMapper;
     }
 
     @Override
@@ -66,6 +70,11 @@ public class AdminUserLoginServiceImpl extends ServiceImpl<AdminUserMapper, Admi
         claims.put(SystemConstants.USER_ID, adminId.toString());
         claims.put(SystemConstants.USER_NAME, adminName);
         claims.put(SystemConstants.ROLE_NAME, roleName);
+        /** 查询书院名，返回给前端 */
+        Long academyId = dbUser.getAcademyId();
+        AcademyInfo academyInfo = academyInfoMapper.selectById(academyId);
+        String academyName = academyInfo.getAcademyName();
+        claims.put(SystemConstants.ACADEMY_NAME, academyName);
 
         String token = JwtUtils.generateToken(claims);
 
@@ -76,8 +85,8 @@ public class AdminUserLoginServiceImpl extends ServiceImpl<AdminUserMapper, Admi
         stringRedisTemplate.expire(adminTokenKey, RedisConstants.LOGIN_TOKEN_TTL, TimeUnit.MINUTES);
 
         // 5.封装数据
-        UserInfoDto userInfoDto = new UserInfoDto(adminId, adminName, roleName);
-        LoginVo loginVo = new LoginVo(token, userInfoDto);
+        AdminInfoDto adminInfoDto = new AdminInfoDto(adminId, adminName, roleName, academyName);
+        LoginVo loginVo = new LoginVo(token, adminInfoDto);
 
         return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.LOGIN.getMsg(), loginVo);
     }
