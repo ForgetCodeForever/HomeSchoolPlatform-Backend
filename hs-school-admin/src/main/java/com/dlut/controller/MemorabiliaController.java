@@ -17,14 +17,34 @@ public class MemorabiliaController {
         this.memorabiliaInfoService = memorabiliaInfoService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseResult<?> addMemorabilia(@RequestBody MemorabiliaInfo memorabiliaInfo) {
         return memorabiliaInfoService.addMemorabilia(memorabiliaInfo);
     }
 
-    @GetMapping("/list")
-    public ResponseResult<List<MemorabiliaInfo>> getAcademyMemorabiliaList(@RequestParam String academyName) {
-        return memorabiliaInfoService.getAcademyMemorabiliaList(academyName);
+    @GetMapping
+    public ResponseResult<List<MemorabiliaInfo>> getAcademyMemorabiliaList(
+            @RequestParam String academyName,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month,
+            @RequestParam(required = false) String keyword
+    ) {
+        return memorabiliaInfoService.getAcademyMemorabiliaList(academyName, year, month, keyword);
+    }
+
+    @PutMapping
+    public ResponseResult<?> editMemorabilia(@RequestBody MemorabiliaInfo memorabiliaInfo) {
+        return memorabiliaInfoService.editMemorabilia(memorabiliaInfo);
+    }
+
+    @GetMapping("/{memorabiliaId}")
+    public ResponseResult<MemorabiliaInfo> getMemorabilia(@PathVariable Long memorabiliaId) {
+        return memorabiliaInfoService.getMemorabilia(memorabiliaId);
+    }
+
+    @DeleteMapping("/{memorabiliaId}")
+    public ResponseResult<?> deleteMemorabilia(@PathVariable Long memorabiliaId) {
+        return memorabiliaInfoService.deleteMemorabilia(memorabiliaId);
     }
 
 }

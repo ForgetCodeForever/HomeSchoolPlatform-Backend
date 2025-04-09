@@ -8,7 +8,7 @@ public enum SuccessHttpMessageEnum {
     LOGOUT("退出成功"),
     ADD("添加成功"),
     DEL("删除成功"),
-    EDIT("修改成功"),
+    EDIT("编辑成功"),
     QUERY("查询成功");
 
     final String msg;

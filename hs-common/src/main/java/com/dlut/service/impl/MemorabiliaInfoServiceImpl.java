@@ -12,6 +12,7 @@ import com.dlut.mapper.MemorabiliaInfoMapper;
 import com.dlut.service.MemorabiliaInfoService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,10 +35,58 @@ public class MemorabiliaInfoServiceImpl extends ServiceImpl<MemorabiliaInfoMappe
     }
 
     @Override
-    public ResponseResult<List<MemorabiliaInfo>> getAcademyMemorabiliaList(String academyName) {
+    public ResponseResult<List<MemorabiliaInfo>> getAcademyMemorabiliaList(String academyName, Integer year, Integer month, String keyword) {
         LambdaQueryWrapper<MemorabiliaInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MemorabiliaInfo::getAcademyName, academyName);
-        List<MemorabiliaInfo> memorabiliaInfos = memorabiliaInfoMapper.selectList(queryWrapper);
-        return ResponseResult.okResult(memorabiliaInfos);
+        /**
+        Bug：会查出搜索月下个月第一天的信息
+        if (year != null && month != null) {
+            // 构造一个月的时间范围
+            LocalDateTime startTime = LocalDateTime.of(year, month, 1, 0, 0);
+            LocalDateTime endTime = startTime.plusMonths(1);
+            queryWrapper.between(MemorabiliaInfo::getMemorabiliaTime, startTime, endTime);
+        }
+         */
+        if (year != null && month != null) {
+            LocalDate startDate = LocalDate.of(year, month, 1);
+            LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+            queryWrapper.between(MemorabiliaInfo::getMemorabiliaTime, startDate, endDate);
+        }
+
+        if (keyword != null && !keyword.isEmpty()) {
+            queryWrapper.like(MemorabiliaInfo::getMemorabiliaContent, keyword);
+        }
+
+        queryWrapper.orderByDesc(MemorabiliaInfo::getMemorabiliaTime);
+        List<MemorabiliaInfo> list = memorabiliaInfoMapper.selectList(queryWrapper);
+        return ResponseResult.okResult(list);
     }
+
+    @Override
+    public ResponseResult<?> editMemorabilia(MemorabiliaInfo memorabiliaInfo) {
+        if(!memorabiliaExist(memorabiliaInfo.getMemorabiliaId())) {
+            throw new SystemException(AppHttpCodeEnum.MEMORABILIA_NOT_EXIST);
+        }
+        memorabiliaInfoMapper.updateById(memorabiliaInfo);
+        return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.EDIT.getMsg());
+    }
+
+    public boolean memorabiliaExist(Long memorabiliaId) {
+        LambdaQueryWrapper<MemorabiliaInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MemorabiliaInfo::getMemorabiliaId, memorabiliaId);
+        return  count(queryWrapper) > 0;
+    }
+
+    @Override
+    public ResponseResult<MemorabiliaInfo> getMemorabilia(Long memorabiliaId) {
+        MemorabiliaInfo memorabiliaInfo = memorabiliaInfoMapper.selectById(memorabiliaId);
+        return ResponseResult.okResult(memorabiliaInfo);
+    }
+
+    @Override
+    public ResponseResult<?> deleteMemorabilia(Long memorabiliaId) {
+        memorabiliaInfoMapper.deleteById(memorabiliaId);
+            return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.DEL.getMsg());
+    }
+
 }

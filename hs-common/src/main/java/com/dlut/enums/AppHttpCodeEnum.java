@@ -13,8 +13,7 @@ public enum AppHttpCodeEnum {
     PASSWORD_NOT_CORRECT(603, "密码错误"),
     /** 事记管理 */
     MEMORABILIA_TOO_LONG(603, "大事记内容不能多于200字"),
-
-    ;
+    MEMORABILIA_NOT_EXIST(604, "大事记不存在");
 
     final int code;
     final String msg;

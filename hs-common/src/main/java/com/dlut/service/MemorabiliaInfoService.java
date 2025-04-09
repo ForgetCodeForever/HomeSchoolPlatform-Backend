@@ -10,5 +10,11 @@ public interface MemorabiliaInfoService extends IService<MemorabiliaInfo> {
 
     ResponseResult<?> addMemorabilia(MemorabiliaInfo memorabiliaInfo);
 
-    ResponseResult<List<MemorabiliaInfo>> getAcademyMemorabiliaList(String academyName);
+    ResponseResult<List<MemorabiliaInfo>> getAcademyMemorabiliaList(String academyName, Integer year, Integer month, String keyword);
+
+    ResponseResult<?> editMemorabilia(MemorabiliaInfo memorabiliaInfo);
+
+    ResponseResult<MemorabiliaInfo> getMemorabilia(Long memorabiliaId);
+
+    ResponseResult<?> deleteMemorabilia(Long memorabiliaId);
 }
