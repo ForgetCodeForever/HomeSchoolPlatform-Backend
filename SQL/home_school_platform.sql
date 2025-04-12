@@ -23,7 +23,7 @@ drop table if exists student_grade;
  */
 create table admin_user (
     admin_id      bigint(20)      not null auto_increment    comment '管理员id',
-    username      varchar(20)     not null                   comment '用户名',
+    username      varchar(20)     not null unique            comment '用户名',
     password      varchar(100)    not null                   comment '密码',
     admin_name    varchar(20)     not null                   comment '管理员name',
     academy_id    bigint(20)      not null                   comment '书院id',
@@ -200,8 +200,8 @@ insert into admin_menu values
 -- -----------------------------------------------------------------------------------------------------------
 (300, '成绩导入', 30, '', '', 'B', 'student:grade:reply', '#'),
 -- -----------------------------------------------------------------------------------------------------------
-(400, '成员注册', 40, '', '', 'B', 'member:register', '#'),
-(401, '成员注销', 40, '', '', 'B', 'member:del',      '#');
+(400, '成员注册', 40, '', '', 'B', 'user:register', '#'),
+(401, '成员注销', 40, '', '', 'B', 'user:del',      '#');
 
 
 /**

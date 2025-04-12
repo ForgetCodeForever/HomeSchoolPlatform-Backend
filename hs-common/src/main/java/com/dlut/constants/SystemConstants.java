@@ -9,4 +9,7 @@ public class SystemConstants {
     public static final String ROLE_NAME = "roleName";
     public static final String ACADEMY_NAME = "academyName";
 
+    public static final String DA_GONG = "大工书院负责人";
+    public static final Long CHILD_ACADEMY = 2L;
+
 }

@@ -26,9 +26,8 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mysql-connector-j.version>8.3.0</mysql-connector-j.version>
         <jjwt.version>0.11.5</jjwt.version>
-        <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.83</fastjson.version>
-
+        <easyexcel.version>3.3.2</easyexcel.version>
     </properties>
 
     <dependencyManagement>
@@ -77,22 +76,17 @@
                 <version>${jjwt.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <!--swagger-->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
             <!--fastjson依赖-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <!-- EasyExcel -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

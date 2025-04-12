@@ -63,7 +63,7 @@ public class AdminUserLoginServiceImpl extends ServiceImpl<AdminUserMapper, Admi
         }
 
         // 3.生成JWT令牌（token）
-        String roleName = adminUserMapper.findRoleNamesByUsername(dbUser.getUsername());
+        String roleName = adminUserMapper.findRoleNameByUsername(dbUser.getUsername());
         Map<String, Object> claims = new HashMap<>();
         Long adminId = dbUser.getAdminId();
         String adminName = dbUser.getAdminName();

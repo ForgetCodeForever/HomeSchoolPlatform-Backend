@@ -74,7 +74,7 @@ public class MemorabiliaInfoServiceImpl extends ServiceImpl<MemorabiliaInfoMappe
     public boolean memorabiliaExist(Long memorabiliaId) {
         LambdaQueryWrapper<MemorabiliaInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MemorabiliaInfo::getMemorabiliaId, memorabiliaId);
-        return  count(queryWrapper) > 0;
+        return count(queryWrapper) > 0;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MemorabiliaInfoServiceImpl extends ServiceImpl<MemorabiliaInfoMappe
     @Override
     public ResponseResult<?> deleteMemorabilia(Long memorabiliaId) {
         memorabiliaInfoMapper.deleteById(memorabiliaId);
-            return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.DEL.getMsg());
+        return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.DEL.getMsg());
     }
 
 }

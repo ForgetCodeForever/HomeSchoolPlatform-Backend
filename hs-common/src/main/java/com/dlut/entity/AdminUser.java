@@ -1,5 +1,6 @@
 package com.dlut.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +23,14 @@ public class AdminUser {
     
     /** 管理员name */
     private String adminName;
+
+    @TableField(exist = false)
+    private String roleName;
     
     /** 书院id */
     private Long academyId;
+
+    @TableField(exist = false)
+    private String academyName;
     
 }

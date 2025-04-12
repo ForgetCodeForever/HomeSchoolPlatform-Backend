@@ -2,7 +2,7 @@ package com.dlut.interceptor;
 
 import com.dlut.constants.RedisConstants;
 import com.dlut.dto.AdminInfoDto;
-import com.dlut.utils.JwtUserConverter;
+import com.dlut.utils.CurrentUserUtils;
 import com.dlut.utils.JwtUtils;
 import com.dlut.utils.UserThreadLocalUtil;
 import io.jsonwebtoken.Claims;
@@ -33,7 +33,7 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         Claims claims = JwtUtils.parseToken(token);
 
         // 2.解析用户信息，存入ThreadLocal
-        AdminInfoDto adminInfoDto = JwtUserConverter.claimsToUserInfo(claims);
+        AdminInfoDto adminInfoDto = CurrentUserUtils.claimsToUserInfo(claims);
         UserThreadLocalUtil.setUser(adminInfoDto);
 
         // 3.如果redis中的token剩余时间小于5分钟，则生成新的token

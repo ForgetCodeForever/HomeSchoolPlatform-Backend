@@ -6,6 +6,8 @@ import lombok.Getter;
 public enum SuccessHttpMessageEnum {
     LOGIN("登录成功"),
     LOGOUT("退出成功"),
+    REGISTER("注册成功"),
+    BATCH("导入成功"),
     ADD("添加成功"),
     DEL("删除成功"),
     EDIT("编辑成功"),
