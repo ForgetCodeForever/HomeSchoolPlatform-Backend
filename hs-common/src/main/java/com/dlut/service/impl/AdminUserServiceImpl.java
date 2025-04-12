@@ -1,16 +1,17 @@
 package com.dlut.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dlut.PageResult;
 import com.dlut.ResponseResult;
 import com.dlut.constants.SystemConstants;
 import com.dlut.dto.AdminInfoDto;
+import com.dlut.dto.ChangePasswordBodyDataDto;
 import com.dlut.entity.AcademyInfo;
 import com.dlut.entity.AdminRole;
 import com.dlut.entity.AdminUser;
+import com.dlut.enums.AppHttpCodeEnum;
 import com.dlut.enums.SuccessHttpMessageEnum;
+import com.dlut.exception.SystemException;
 import com.dlut.mapper.AcademyInfoMapper;
 import com.dlut.mapper.AdminRoleMapper;
 import com.dlut.mapper.AdminUserMapper;
@@ -20,9 +21,7 @@ import com.dlut.utils.PasswordEncryptor;
 import com.dlut.utils.UserThreadLocalUtil;
 import com.dlut.vo.AdminUserListVo;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,37 +64,6 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         AdminRole adminRole = adminRoleMapper.selectOne(roleLambdaQueryWrapper);
         adminUserMapper.insertUserRole(adminUser.getAdminId(), adminRole.getRoleId());
         return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.REGISTER.getMsg());
-    }
-
-    @Override
-    public ResponseResult<?> batchRegister(MultipartFile file) {
-        return null;
-//        try {
-//            List<AdminUserExcelDto> userList = EasyExcel.read(file.getInputStream())
-//                    .head(AdminUserExcelDto.class)
-//                    .sheet()
-//                    .doReadSync();
-//
-//            // 校验、去重、过滤
-//            if (CollectionUtils.isEmpty(userList)) {
-//                return ResponseResult.errorResult("文件内容为空");
-//            }
-//
-//            List<AdminUser> entities = userList.stream().map(dto -> {
-//                AdminUser user = new AdminUser();
-//                user.setUsername(dto.getUsername());
-//                user.setPassword(PasswordEncryptor.encrypt(dto.getPassword())); // 建议加密
-//                user.setAdminName(dto.getAdminName());
-//                user.setAcademyId(dto.getAcademyId());
-//                return user;
-//            }).collect(Collectors.toList());
-//
-//            saveBatch(entities);
-//            return ResponseResult.okResult().put("count", entities.size());
-//        } catch (Exception e) {
-//            log.error("导入失败", e);
-//            return ResponseResult.errorResult("导入失败：" + e.getMessage());
-//        }
     }
 
     @Override
@@ -145,6 +113,20 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         // 2.删除user_role关系
         adminUserMapper.deleteUserRole(adminId);
         return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.DEL.getMsg());
+    }
+
+    @Override
+    public ResponseResult<?> changePassword(ChangePasswordBodyDataDto changePasswordBodyDataDto) {
+        String oldPassword = changePasswordBodyDataDto.getOldPassword();
+        Long adminId = UserThreadLocalUtil.getUser().getAdminId();
+        AdminUser adminUser = adminUserMapper.selectById(adminId);
+        if (!PasswordEncryptor.verify(oldPassword, adminUser.getPassword())) {
+            throw new SystemException(AppHttpCodeEnum.ORIGIN_PASSWORD_NOT_CORRECT);
+        }
+        String newPassword = changePasswordBodyDataDto.getNewPassword();
+        adminUser.setPassword(PasswordEncryptor.encrypt(newPassword));
+        adminUserMapper.updateById(adminUser);
+        return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.CHANGE_PASSWORD.getMsg());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.dlut.controller;
 
 import com.dlut.ResponseResult;
+import com.dlut.dto.ChangePasswordBodyDataDto;
 import com.dlut.entity.AdminUser;
 import com.dlut.service.AdminUserService;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +24,6 @@ public class AdminUserController {
         return adminUserService.register(adminUser);
     }
 
-    @PostMapping("/batch")
-    public ResponseResult<?> batchRegister(@RequestParam("file") MultipartFile file) {
-        return adminUserService.batchRegister(file);
-    }
-
     @GetMapping
     public ResponseResult<?> getAcademyAdminUserList() {
         return adminUserService.getAcademyAdminUserList();
@@ -41,6 +37,11 @@ public class AdminUserController {
     @DeleteMapping("/{adminId}")
     public ResponseResult<?> deleteAdminUser(@PathVariable("adminId") Long adminId) {
         return adminUserService.deleteAdminUser(adminId);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseResult<?> changePassword(@RequestBody ChangePasswordBodyDataDto changePasswordBodyDataDto) {
+        return adminUserService.changePassword(changePasswordBodyDataDto);
     }
 
 }
