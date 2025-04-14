@@ -148,6 +148,7 @@ insert into role_menu values
 (6, 200),
 (6, 3),
 (6, 30),
+(6, 31),
 (6, 300);
 
 
@@ -172,12 +173,13 @@ insert into admin_menu values
 (3, '学生管理', 0, 'student', null,            'P', null,          'iconfont icon-ic_student'),
 (4, '成员管理', 0, 'user',    'user/User',     'P', 'user:list',   'iconfont icon-member'),
 -- ===========================================================================================================
-(10, '事记管理',    1, 'memorabilia', 'content/memorabilia/Memorabilia', 'C', 'content:memorabilia:list', '#'),
-(11, '书院之星管理', 1, 'star',        'content/star/Star',               'C', 'content:star:list',        '#'),
-(12, '文体活动管理', 1, 'activity',    'content/activity/Activity',       'C', 'content:activity:list',    '#'),
-(13, '学习天地管理', 1, 'course',      'content/course/Course',           'C', 'content:course:list',      '#'),
+(10, '事记管理',    1, 'memorabilia', 'content/memorabilia/Memorabilia', 'C', 'content:memorabilia:list', 'iconfont icon-memorabilia'),
+(11, '书院之星管理', 1, 'star',        'content/star/Star',               'C', 'content:star:list',        'iconfont icon-Star'),
+(12, '文体活动管理', 1, 'activity',    'content/activity/Activity',       'C', 'content:activity:list',    'iconfont icon-activity'),
+(13, '学习天地管理', 1, 'course',      'content/course/Course',           'C', 'content:course:list',      'iconfont icon-fs-course'),
 -- -----------------------------------------------------------------------------------------------------------
-(30, '成绩管理', 3, 'grade', 'student/grade/Grade', 'C', 'student:grade:list', '#'),
+(30, '信息管理', 3, 'studentInfo', 'student/studentInfo/StudentInfo', 'C', 'student:studentInfo:list', 'iconfont icon-a-Studentinformation'),
+(31, '成绩管理', 3, 'grade',       'student/grade/Grade',             'C', 'student:grade:list',       'iconfont icon-grade'),
 -- ===========================================================================================================
 (100, '事记新增', 10, '', '', 'B', 'content:memorabilia:add',   '#'),
 (101, '事记删除', 10, '', '', 'B', 'content:memorabilia:del',   '#'),
@@ -222,7 +224,7 @@ create table parent_info (
 create table student_info (
     student_number    bigint(20)      not null        comment '学号',
     student_name      varchar(20)     not null        comment '学生姓名',
-    academy_name      bigint(20)      not null        comment '书院名称',
+    academy_name      varchar(20)     not null        comment '书院名称',
     major_id          bigint(20)      not null        comment '专业id',
     student_class     varchar(10)     not null        comment '学生班级',
     primary key (student_number)
@@ -264,22 +266,12 @@ create table major_info (
 ) engine=innodb comment = '专业信息表';
 
 insert into major_info values
-(1,  '知行书院', '电子信息类', '', '0'),
-(2,  '知行书院', '电子信息类', '电气工程及其自动化', '1'),
-(3,  '知行书院', '电子信息类', '自动化', '1'),
-(4,  '知行书院', '电子信息类', '电子信息工程', '1'),
-(5,  '知行书院', '电子信息类', '计算机科学与技术', '1'),
-(6,  '知行书院', '电子信息类', '生物医学工程', '1'),
-(7,  '知行书院', '电子信息类', '光电信息科学与工程', '1'),
-(8,  '知行书院', '大数据管理与应用', '', '0'),
-(9,  '知行书院', '大数据管理与应用', '大数据管理与应用', '1'),
-(10, '知行书院', '大数据管理与应用', '信息管理与信息系统', '1'),
-(11, '求实书院', '软件工程', '', '0'),
-(12, '求实书院', '软件工程', '软件工程', '1'),
-(13, '求实书院', '软件工程', '网络工程', '1'),
-(14, '求实书院', '电子信息与技术', '', '0'),
-(15, '求实书院', '电子信息与技术', '集成电路设计与集成系统', '1'),
-(16, '求实书院', '电子信息与技术', '电子科学与技术', '1');
+(1, '求实书院', '软件工程', '', '0'),
+(2, '求实书院', '软件工程', '软件工程', '1'),
+(3, '求实书院', '软件工程', '网络工程', '1'),
+(4, '求实书院', '电子信息与技术', '', '0'),
+(5, '求实书院', '电子信息与技术', '集成电路设计与集成系统', '1'),
+(6, '求实书院', '电子信息与技术', '电子科学与技术', '1');
 
 
 /**

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlut.mapper.StudentInfoMapper">
+
+    <!-- 批量插入学生信息 -->
+    <insert id="batchInsert">
+        INSERT INTO student_info (student_number, student_name, academy_name, major_id, student_class)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.studentNumber}, #{item.studentName}, #{item.academyName}, #{item.majorId}, #{item.studentClass})
+        </foreach>
+    </insert>
+
+</mapper>

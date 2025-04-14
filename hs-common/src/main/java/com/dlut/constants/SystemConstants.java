@@ -12,4 +12,11 @@ public class SystemConstants {
     public static final String DA_GONG = "大工书院负责人";
     public static final Long CHILD_ACADEMY = 2L;
 
+    public static final String ORIGIN_PASSWORD = "123456";
+
+
+    public static final String DB_DIVERTED = "1";
+    public static final String NOT_DIVERTED = "未分流";
+    public static final String DIVERTED = "已分流";
+
 }
