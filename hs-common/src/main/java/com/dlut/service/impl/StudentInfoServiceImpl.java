@@ -2,6 +2,7 @@ package com.dlut.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dlut.PageResult;
@@ -11,6 +12,7 @@ import com.dlut.dto.StudentInfoExcelDto;
 import com.dlut.entity.MajorInfo;
 import com.dlut.entity.ParentInfo;
 import com.dlut.entity.StudentInfo;
+import com.dlut.enums.AppHttpCodeEnum;
 import com.dlut.enums.SuccessHttpMessageEnum;
 import com.dlut.mapper.MajorInfoMapper;
 import com.dlut.mapper.ParentInfoMapper;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,34 +50,74 @@ public class StudentInfoServiceImpl extends ServiceImpl<StudentInfoMapper, Stude
         this.majorInfoMapper = majorInfoMapper;
     }
 
-   @Override
+    @Override
     public ResponseResult<?> batchUpload(MultipartFile file) {
         try {
+            // 1.读取Excel内容
             List<StudentInfoExcelDto> dataList = EasyExcel.read(file.getInputStream())
                     .head(StudentInfoExcelDto.class)
                     .sheet()
                     .doReadSync();
 
+            if (CollectionUtils.isEmpty(dataList)) {
+                return ResponseResult.errorResult(AppHttpCodeEnum.EXCEL_EMPTY);
+            }
+
+            // 2.转换为StudentInfo 实体
             List<StudentInfo> studentList = dataList.stream().map(model -> {
                 StudentInfo info = new StudentInfo();
                 BeanUtils.copyProperties(model, info);
                 return info;
-            }).collect(Collectors.toList());
+            }).toList();
 
-            studentInfoMapper.batchInsert(studentList);
+            // 3.获取所有导入学号
+            List<String> importStudentIds = studentList.stream()
+                    .map(StudentInfo::getStudentNumber)
+                    .map(String::valueOf)
+                    .collect(Collectors.toList());
 
-            // 初始化家长信息
-            studentList.forEach(student -> {
-                ParentInfo parent = new ParentInfo();
-                parent.setStudentNumber(Long.valueOf(student.getStudentNumber()));
-                parent.setPassword(PasswordEncryptor.encrypt(SystemConstants.ORIGIN_PASSWORD));
-                parent.setPhoneNumber(null);
-                parentInfoMapper.insert(parent);
-            });
+            // 4.查询已存在的学号
+            List<StudentInfo> existingStudents = studentInfoMapper.selectBatchIds(importStudentIds);
+            Set<String> existingIds = existingStudents.stream()
+                    .map(s -> String.valueOf(s.getStudentNumber()))
+                    .collect(Collectors.toSet());
+            // 改为List<String>并排序
+            List<String> sortedFailedIds = existingIds.stream()
+                    .sorted()
+                    .collect(Collectors.toList());
+
+            // 5.过滤出待插入的新学生
+            List<StudentInfo> toInsertList = studentList.stream()
+                    .filter(s -> !existingIds.contains(String.valueOf(s.getStudentNumber())))
+                    .collect(Collectors.toList());
+
+            // 6.插入学生数据
+            if (!CollectionUtils.isEmpty(toInsertList)) {
+                studentInfoMapper.batchInsert(toInsertList);
+
+                // 7.初始化家长信息
+                toInsertList.forEach(student -> {
+                    ParentInfo parent = new ParentInfo();
+                    parent.setStudentNumber(Long.valueOf(student.getStudentNumber()));
+                    parent.setPassword(PasswordEncryptor.encrypt(SystemConstants.ORIGIN_PASSWORD));
+                    parent.setPhoneNumber(null);
+                    parentInfoMapper.insert(parent);
+                });
+            }
+
+            // 8.返回导入结果
+            if (existingIds.isEmpty()) {
+                return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.BATCH.getMsg());
+            } else {
+                String failedMessage = "以下学号已存在未导入：\n" + String.join(", ", sortedFailedIds);
+                return ResponseResult.okResult(SystemConstants.SUCCESS, failedMessage);
+            }
+
         } catch (IOException e) {
-            throw new RuntimeException("上传解析失败", e);
+            return ResponseResult.errorResult(AppHttpCodeEnum.FILE_FORMAT_INCORRECT);
+        } catch (Exception e) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.BATCH_ERROR);
         }
-        return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.BATCH.getMsg());
     }
 
     @Override

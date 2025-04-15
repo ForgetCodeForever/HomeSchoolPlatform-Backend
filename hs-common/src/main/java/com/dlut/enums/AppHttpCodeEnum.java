@@ -15,7 +15,11 @@ public enum AppHttpCodeEnum {
     MEMORABILIA_TOO_LONG(603, "大事记内容不能多于200字"),
     MEMORABILIA_NOT_EXIST(604, "大事记不存在"),
     /** 修改密码 */
-    ORIGIN_PASSWORD_NOT_CORRECT(605, "原密码错误");
+    ORIGIN_PASSWORD_NOT_CORRECT(605, "原密码错误"),
+    /** 学生信息管理 */
+    EXCEL_EMPTY(606, "Excel内容为空"),
+    FILE_FORMAT_INCORRECT(607, "上传解析失败，请检查文件格式"),
+    BATCH_ERROR(608, "导入过程中发生错误");
 
     final int code;
     final String msg;
