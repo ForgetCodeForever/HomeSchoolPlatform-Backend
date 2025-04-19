@@ -34,6 +34,8 @@ public class MajorDataServiceImpl extends ServiceImpl<MajorDataMapper, MajorData
         LambdaQueryWrapper<MajorData> queryWrapper = new LambdaQueryWrapper<>();
         if (majorId != null) {
             queryWrapper.eq(MajorData::getMajorId, majorId);
+            queryWrapper.orderByAsc(MajorData::getMajorId);
+            queryWrapper.orderByDesc(MajorData::getYear);
             List<MajorData> majorData = majorDataMapper.selectList(queryWrapper);
             return ResponseResult.okResult(majorData);
         }
@@ -42,6 +44,8 @@ public class MajorDataServiceImpl extends ServiceImpl<MajorDataMapper, MajorData
                 .map(MajorInfo::getMajorId)
                 .collect(Collectors.toList());
         queryWrapper.in(MajorData::getMajorId, majorIds);
+        queryWrapper.orderByAsc(MajorData::getMajorId);
+        queryWrapper.orderByDesc(MajorData::getYear);
         List<MajorData> majorData = majorDataMapper.selectList(queryWrapper);
         return ResponseResult.okResult(majorData);
     }
