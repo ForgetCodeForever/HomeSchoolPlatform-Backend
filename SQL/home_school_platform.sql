@@ -6,16 +6,21 @@ drop table if exists user_role;
 drop table if exists admin_role;
 drop table if exists role_menu;
 drop table if exists admin_menu;
+
 drop table if exists parent_info;
 drop table if exists student_info;
 drop table if exists academy_info;
 drop table if exists major_info;
 drop table if exists memorabilia_info;
+
 drop table if exists star_info;
 drop table if exists activity_info;
 drop table if exists parent_advice;
 drop table if exists course_info;
-drop table if exists student_grade;
+drop table if exists student_rank;
+
+drop table if exists major_data;
+drop table if exists major_course;
 
 
 /**
@@ -31,16 +36,21 @@ create table admin_user (
 ) engine=innodb comment = '管理员信息表';
 
 insert into admin_user values
-(1,  'dagong',  'Beewa8j88e5bU485cf+ddOb5+8f743i5c7b1Kd6B2fU01X0a', '大工书院负责人', 1),
-(2,  'dayu',    'G89cf8EfcWf7S9ej2c392Df2Ab9i74Odajbc44bj4f5f77d0', '大煜书院负责人', 2),
-(3,  'bochuan', '430f/b9bNfP9Vafdy7DfP2ee/5z2c6Fd0ed0648b6958f5a7', '伯川书院负责人', 3),
-(4,  'lingxi',  '02d775774z55964tc6H22effq73s16n26X1a53842ak6fic1', '令希书院负责人', 4),
-(5,  'houde',   'Ee5bJ1F1wfib86Hdk2C4v2M3P0d1eee67452dd28fc79f0a4', '厚德书院负责人', 5),
-(6,  'zhixing', 'i288J5e68aS289XdfbAcr09dB6r7W6Uea94e660fa1a8d06d', '知行书院负责人', 6),
-(7,  'duxue',   'm6T6N1+b77R3l1cdD8R3caebm9a5T5o294b27cd9ca9c91df', '笃学书院负责人', 7),
-(8,  'qiushi',  'b1aCbbB97D7366aH03x28n4dGd043a+d6kf3KacQ44t1fK40', '求实书院负责人', 8),
-(9,  'ziqiang', '7bWcEbe5g3adV4Y1g6Y010D342o6f4i36e6f1e487a23f73f', '自强书院负责人', 9),
-(10, 'weilai',  'z18Ya4aea507Zc01b28884aeWafF97pa0m4cI98gd5Iaa981', '未来书院负责人', 10);
+(1,  'dagong',   'Beewa8j88e5bU485cf+ddOb5+8f743i5c7b1Kd6B2fU01X0a', '大工书院负责人',       1),
+(2,  'dayu',     'G89cf8EfcWf7S9ej2c392Df2Ab9i74Odajbc44bj4f5f77d0', '大煜书院负责人',       2),
+(3,  'bochuan',  '430f/b9bNfP9Vafdy7DfP2ee/5z2c6Fd0ed0648b6958f5a7', '伯川书院负责人',       3),
+(4,  'lingxi',   '02d775774z55964tc6H22effq73s16n26X1a53842ak6fic1', '令希书院负责人',       4),
+(5,  'houde',    'Ee5bJ1F1wfib86Hdk2C4v2M3P0d1eee67452dd28fc79f0a4', '厚德书院负责人',       5),
+(6,  'zhixing',  'i288J5e68aS289XdfbAcr09dB6r7W6Uea94e660fa1a8d06d', '知行书院负责人',       6),
+(7,  'duxue',    'm6T6N1+b77R3l1cdD8R3caebm9a5T5o294b27cd9ca9c91df', '笃学书院负责人',       7),
+(8,  'qiushi',   'b1aCbbB97D7366aH03x28n4dGd043a+d6kf3KacQ44t1fK40', '求实书院负责人',       8),
+(9,  'ziqiang',  '7bWcEbe5g3adV4Y1g6Y010D342o6f4i36e6f1e487a23f73f', '自强书院负责人',       9),
+(10, 'weilai',   'z18Ya4aea507Zc01b28884aeWafF97pa0m4cI98gd5Iaa981', '未来书院负责人',       10),
+(11, 'zhongxin', 'L95h9cR9dR6fc21Rbf105m98Idcaf0/8aL07r34n5abe4q15', '中心食堂负责人',       1),
+(12, 'diliu',    '/0bu7cWefz26if7T092f5Zeb93eG360c7j00e6db441ec2a3', '第六学生食堂负责人',    8),
+(13, 'fudao',    'Y1bfc74d7q89N4bJb7/00y3fo5dReeNd095fP46Od8A0fp19', '求实书院辅导员',       8),
+(14, 'wenti',    'P93E27O92Nd9E2dKb7Ta4l70X5am80Ka6Nc0Ua96a0U0aF49', '求实书院文体板块负责人', 8),
+(15, 'jiaoxue',  'P38Ef0zd5h67Bb2F45S62q8304d49df4d6f263aE00s83Zba', '求实书院教学板块负责人', 8);
 
 
 /**
@@ -62,7 +72,12 @@ insert into user_role values
 (7, 2),
 (8, 2),
 (9, 2),
-(10, 2);
+(10, 2),
+(11, 5),
+(12, 5),
+(13, 6),
+(14, 3),
+(15, 4);
 
 
 /**
@@ -149,7 +164,8 @@ insert into role_menu values
 (6, 3),
 (6, 30),
 (6, 31),
-(6, 300);
+(6, 300),
+(6, 5);
 
 
 /**
@@ -172,6 +188,7 @@ insert into admin_menu values
 (2, '建议管理', 0, 'advice',  'advice/Advice', 'P', 'advice:list', 'iconfont icon-advice'),
 (3, '学生管理', 0, 'student', null,            'P', null,          'iconfont icon-ic_student'),
 (4, '成员管理', 0, 'user',    'user/User',     'P', 'user:list',   'iconfont icon-member'),
+(5, '专业数据', 0, 'data',    'data/Data',     'P', 'data:list',   'iconfont icon-data'),
 -- ===========================================================================================================
 (10, '事记管理',    1, 'memorabilia', 'content/memorabilia/Memorabilia', 'C', 'content:memorabilia:list', 'iconfont icon-memorabilia'),
 (11, '书院之星管理', 1, 'star',        'content/star/Star',               'C', 'content:star:list',        'iconfont icon-Star'),
@@ -179,7 +196,7 @@ insert into admin_menu values
 (13, '学习天地管理', 1, 'course',      'content/course/Course',           'C', 'content:course:list',      'iconfont icon-fs-course'),
 -- -----------------------------------------------------------------------------------------------------------
 (30, '信息管理', 3, 'studentInfo', 'student/studentInfo/StudentInfo', 'C', 'student:studentInfo:list', 'iconfont icon-a-Studentinformation'),
-(31, '成绩管理', 3, 'grade',       'student/grade/Grade',             'C', 'student:grade:list',       'iconfont icon-grade'),
+(31, '排名管理', 3, 'rank',        'student/rank/Rank',               'C', 'student:rank:list',        'iconfont icon-rank'),
 -- ===========================================================================================================
 (100, '事记新增', 10, '', '', 'B', 'content:memorabilia:add',   '#'),
 (101, '事记删除', 10, '', '', 'B', 'content:memorabilia:del',   '#'),
@@ -306,7 +323,6 @@ create table activity_info (
     activity_time        varchar(50)     not null                   comment '文体活动时间',
     activity_location    varchar(100)    not null                   comment '文体活动地点',
     activity_content     longtext        not null                   comment '文体活动内容',
-    static_url           varchar(150)    not null                   comment '内容地址',
     primary key (activity_id)
 ) engine=innodb comment = '文体活动信息表';
 
@@ -329,9 +345,9 @@ create table parent_advice (
   14.课程信息表
  */
 create table course_info (
-    course_id             bigint(20)     not null auto_increment    comment '建议id',
-    course_name           varchar(20)    not null                   comment '建议id',
-    course_description    longtext       not null                   comment '建议id',
+    course_id             bigint(20)     not null auto_increment    comment '课程id',
+    course_name           varchar(20)    not null                   comment '课程名称',
+    course_description    longtext       not null                   comment '课程描述',
     is_compulsory         char(1)        not null                   comment '是否必修',
     is_postgraduate       char(1)        not null                   comment '是否保研参算',
     primary key (course_id)
@@ -339,19 +355,38 @@ create table course_info (
 
 
 /**
-  15.学生成绩表
+  15.学生排名表
  */
-create table student_grade (
-    grade_id         bigint(20)    not null auto_increment    comment '成绩id',
-    course_id        bigint(20)    not null                   comment '课程id',
-    grade_value      int(3)        not null                   comment '成绩',
-    academic_year    int(4)        not null                   comment '学年',
-    semester         char(1)       not null                   comment '学期',
-    primary key (grade_id)
-) engine=innodb comment = '学生成绩表';
+create table student_rank (
+    student_number   bigint(20)    not null auto_increment    comment '学号',
+    _1               int(5)        default null               comment '大一上排名',
+    _2               int(5)        default null               comment '大一下排名',
+    _3               int(5)        default null               comment '大二上排名',
+    _4               int(5)        default null               comment '大二下排名',
+    _5               int(5)        default null               comment '大三上排名',
+    _6               int(5)        default null               comment '大三下排名',
+    primary key (student_number)
+) engine=innodb comment = '学生排名表';
 
 
 /**
-  major_course表
+  16.专业数据表
  */
+create table major_data (
+    data_id           bigint(20)    not null auto_increment    comment '数据id',
+    major_id          bigint(20)    not null                   comment '专业id',
+    total_students    int(5)        not null                   comment '专业人数',
+    graduate_rate     int(5)        not null                   comment '保研率',
+    year              int(5)        not null                   comment '20xx级',
+    primary key (data_id)
+) engine=innodb comment = '专业数据表';
 
+
+/**
+  17.专业课程表
+ */
+create table major_course (
+    major_id     bigint(20)    not null    comment '专业id',
+    course_id    bigint(20)    not null    comment '课程id',
+    primary key (major_id, course_id)
+) engine=innodb comment = '专业课程表';
