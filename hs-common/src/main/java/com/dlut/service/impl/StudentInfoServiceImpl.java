@@ -12,11 +12,13 @@ import com.dlut.dto.StudentInfoExcelDto;
 import com.dlut.entity.MajorInfo;
 import com.dlut.entity.ParentInfo;
 import com.dlut.entity.StudentInfo;
+import com.dlut.entity.StudentRank;
 import com.dlut.enums.AppHttpCodeEnum;
 import com.dlut.enums.SuccessHttpMessageEnum;
 import com.dlut.mapper.MajorInfoMapper;
 import com.dlut.mapper.ParentInfoMapper;
 import com.dlut.mapper.StudentInfoMapper;
+import com.dlut.mapper.StudentRankMapper;
 import com.dlut.service.StudentInfoService;
 import com.dlut.utils.PasswordEncryptor;
 import com.dlut.utils.UserThreadLocalUtil;
@@ -39,15 +41,18 @@ public class StudentInfoServiceImpl extends ServiceImpl<StudentInfoMapper, Stude
     private final StudentInfoMapper studentInfoMapper;
     private final ParentInfoMapper parentInfoMapper;
     private final MajorInfoMapper majorInfoMapper;
+    private final StudentRankMapper studentRankMapper;
 
     public StudentInfoServiceImpl(
             StudentInfoMapper studentInfoMapper,
             ParentInfoMapper parentInfoMapper,
-            MajorInfoMapper majorInfoMapper
+            MajorInfoMapper majorInfoMapper,
+            StudentRankMapper studentRankMapper
     ) {
         this.studentInfoMapper = studentInfoMapper;
         this.parentInfoMapper = parentInfoMapper;
         this.majorInfoMapper = majorInfoMapper;
+        this.studentRankMapper = studentRankMapper;
     }
 
     @Override
@@ -102,6 +107,13 @@ public class StudentInfoServiceImpl extends ServiceImpl<StudentInfoMapper, Stude
                     parent.setPassword(PasswordEncryptor.encrypt(SystemConstants.ORIGIN_PASSWORD));
                     parent.setPhoneNumber(null);
                     parentInfoMapper.insert(parent);
+                });
+
+                // 10.初始化学生排名信息
+                toInsertList.forEach(studentInfo -> {
+                    StudentRank rank = new StudentRank();
+                    rank.setStudentNumber(Long.valueOf(studentInfo.getStudentNumber()));
+                    studentRankMapper.insert(rank);
                 });
             }
 

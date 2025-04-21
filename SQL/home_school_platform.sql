@@ -359,12 +359,12 @@ create table course_info (
  */
 create table student_rank (
     student_number   bigint(20)    not null auto_increment    comment '学号',
-    _1               int(5)        default null               comment '大一上排名',
-    _2               int(5)        default null               comment '大一下排名',
-    _3               int(5)        default null               comment '大二上排名',
-    _4               int(5)        default null               comment '大二下排名',
-    _5               int(5)        default null               comment '大三上排名',
-    _6               int(5)        default null               comment '大三下排名',
+    rank1           int(5)        default null               comment '大一上排名',
+    rank2           int(5)        default null               comment '大一下排名',
+    rank3           int(5)        default null               comment '大二上排名',
+    rank4           int(5)        default null               comment '大二下排名',
+    rank5           int(5)        default null               comment '大三上排名',
+    rank6           int(5)        default null               comment '大三下排名',
     primary key (student_number)
 ) engine=innodb comment = '学生排名表';
 

@@ -18,8 +18,8 @@ public enum AppHttpCodeEnum {
     ORIGIN_PASSWORD_NOT_CORRECT(605, "原密码错误"),
     /** 学生信息管理 */
     EXCEL_EMPTY(606, "Excel内容为空"),
-    FILE_FORMAT_INCORRECT(607, "上传解析失败，请检查文件格式"),
-    BATCH_ERROR(608, "导入过程中发生错误");
+    FILE_FORMAT_INCORRECT(607, "文件格式错误"),
+    BATCH_ERROR(608, "上传失败");
 
     final int code;
     final String msg;
