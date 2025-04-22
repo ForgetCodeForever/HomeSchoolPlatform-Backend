@@ -19,4 +19,9 @@ public class SystemConstants {
     public static final String NOT_DIVERTED = "未分流";
     public static final String DIVERTED = "已分流";
 
+    public static final String PARENT_ID = "parentId";
+    public static final String STUDENT_NUMBER = "studentNumber";
+    public static final String STUDENT_NAME = "studentName";
+    public static final String MAJOR_FULL_NAME = "majorFullName";
+    public static final String STUDENT_CLASS = "studentClass";
 }

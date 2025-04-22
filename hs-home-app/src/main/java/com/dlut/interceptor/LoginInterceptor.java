@@ -1,11 +1,12 @@
 package com.dlut.interceptor;
 
 import com.dlut.constants.RedisConstants;
-import com.dlut.dto.AdminInfoDto;
+import com.dlut.dto.ParentInfoDto;
 import com.dlut.utils.CurrentUserUtils;
 import com.dlut.utils.JwtUtils;
-import com.dlut.utils.UserThreadLocalUtil;
+import com.dlut.utils.ParentThreadLocalUtil;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,31 +15,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 
-public class RefreshTokenInterceptor implements HandlerInterceptor {
+@RequiredArgsConstructor
+public class LoginInterceptor implements HandlerInterceptor {
 
     private final StringRedisTemplate stringRedisTemplate;
-
-    public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 1.获取请求头中的token
         String authorizationHeader = request.getHeader("Authorization");
         if (!StringUtils.hasText(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
-            return true; // 放行
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return false; // 放行
         }
         String token = authorizationHeader.substring(7);
         Claims claims = JwtUtils.parseToken(token);
 
         // 2.解析用户信息，存入ThreadLocal
-        AdminInfoDto adminInfoDto = CurrentUserUtils.claimsToUserInfo(claims);
-        UserThreadLocalUtil.setUser(adminInfoDto);
+        ParentInfoDto parentInfoDto = CurrentUserUtils.claimsToParentInfo(claims);
+        ParentThreadLocalUtil.setUser(parentInfoDto);
 
         // 3.如果redis中的token过期，则拦截
-        Long adminId = adminInfoDto.getAdminId();
-        String redisKey = RedisConstants.LOGIN_TOKEN_ADMIN + adminId;
+        Long parentId = parentInfoDto.getParentId();
+        String redisKey = RedisConstants.LOGIN_TOKEN_PARENT + parentId;
 
         Long expireTime = stringRedisTemplate.getExpire(redisKey, TimeUnit.MINUTES);
         if (expireTime == null || expireTime <= 0) {
@@ -46,21 +45,13 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // 4.如果token剩余时间小于5分钟，则生成新的token
-        if (expireTime < RedisConstants.TOKEN_REFRESH_THRESHOLD) {
-            String newToken = JwtUtils.generateToken(claims);
-            // 更新 Redis
-            stringRedisTemplate.opsForValue().set(redisKey, newToken, RedisConstants.LOGIN_TOKEN_TTL, TimeUnit.MINUTES);
-            // 在响应头中返回新 Token
-            response.setHeader("NewToken", "Bearer " + newToken);
-        }
+        // 放行
         return true; // 继续执行后续请求
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         // 移除用户
-        UserThreadLocalUtil.removeUser();
+        ParentThreadLocalUtil.removeUser();
     }
-
 }

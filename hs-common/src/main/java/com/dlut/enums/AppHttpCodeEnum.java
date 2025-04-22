@@ -6,6 +6,9 @@ import lombok.Getter;
 public enum AppHttpCodeEnum {
     SUCCESS(200,"操作成功"),
     SYSTEM_ERROR(500,"系统错误"),
+    /**
+     * 学校端
+     */
     /** 用户登录 */
     USERNAME_NOT_NULL(600, "用户名不能为空"),
     PASSWORD_NOT_NULL(601, "密码不能为空"),
@@ -19,7 +22,12 @@ public enum AppHttpCodeEnum {
     /** 学生信息管理 */
     EXCEL_EMPTY(606, "Excel内容为空"),
     FILE_FORMAT_INCORRECT(607, "文件格式错误"),
-    BATCH_ERROR(608, "上传失败");
+    BATCH_ERROR(608, "上传失败"),
+    /**
+     * 家长端
+     */
+    /** 登录 */
+    PARENT_NOT_EXISTS(700, "用户不存在");
 
     final int code;
     final String msg;
