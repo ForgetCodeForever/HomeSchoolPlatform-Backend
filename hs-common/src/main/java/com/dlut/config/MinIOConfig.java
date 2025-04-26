@@ -25,5 +25,4 @@ public class MinIOConfig implements Serializable {
                 .credentials(accessKey, secretKey)
                 .build();
     }
-
 }

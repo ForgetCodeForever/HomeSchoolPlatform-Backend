@@ -27,7 +27,9 @@ public enum AppHttpCodeEnum {
      * 家长端
      */
     /** 登录 */
-    PARENT_NOT_EXISTS(700, "用户不存在");
+    PARENT_NOT_EXISTS(700, "用户不存在"),
+    /** 家长建议 */
+    MINIO_UPLOAD_ERROR(701, "上传失败");
 
     final int code;
     final String msg;
