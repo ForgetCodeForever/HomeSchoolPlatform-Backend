@@ -17,4 +17,6 @@ public interface AdminUserService extends IService<AdminUser> {
     ResponseResult<?> deleteAdminUser(Long adminId);
 
     ResponseResult<?> changePassword(ChangePasswordBodyDataDto changePasswordBodyDataDto);
+
+    ResponseResult<?> getAdminUserList();
 }

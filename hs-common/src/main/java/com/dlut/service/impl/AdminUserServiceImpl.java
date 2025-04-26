@@ -17,6 +17,7 @@ import com.dlut.mapper.AdminRoleMapper;
 import com.dlut.mapper.AdminUserMapper;
 import com.dlut.service.AcademyInfoService;
 import com.dlut.service.AdminUserService;
+import com.dlut.utils.ParentThreadLocalUtil;
 import com.dlut.utils.PasswordEncryptor;
 import com.dlut.utils.UserThreadLocalUtil;
 import com.dlut.vo.AdminUserListVo;
@@ -127,6 +128,28 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         adminUser.setPassword(PasswordEncryptor.encrypt(newPassword));
         adminUserMapper.updateById(adminUser);
         return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.CHANGE_PASSWORD.getMsg());
+    }
+
+    @Override
+    public ResponseResult<?> getAdminUserList() {
+        // 根据书院名查询书院id
+        String academyName = ParentThreadLocalUtil.getUser().getAcademyName();
+        LambdaQueryWrapper<AcademyInfo> academyInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        academyInfoLambdaQueryWrapper.eq(AcademyInfo::getAcademyName, academyName);
+        AcademyInfo academyInfo = academyInfoMapper.selectOne(academyInfoLambdaQueryWrapper);
+        // 查询当前书院所有管理员
+        LambdaQueryWrapper<AdminUser> adminUserLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        adminUserLambdaQueryWrapper.eq(AdminUser::getAcademyId, academyInfo.getAcademyId());
+        List<AdminUser> adminUsers = adminUserMapper.selectList(adminUserLambdaQueryWrapper);
+        // 封装数据
+        List<AcademyInfo> academyInfos = academyInfoService.getAcademyList().getData();
+        Map<Long, String> academyInfoMap = academyInfos.stream()
+                .collect(Collectors.toMap(AcademyInfo::getAcademyId, AcademyInfo::getAcademyName));
+
+        List<AdminUserListVo> adminUserListVos = adminUsers.stream()
+                .map(item -> new AdminUserListVo(item.getAdminId(), item.getUsername(), item.getAdminName(), adminUserMapper.findRoleNameByUsername(item.getUsername()), academyInfoMap.get(item.getAcademyId())))
+                .toList();
+        return ResponseResult.okResult(adminUserListVos);
     }
 
 }

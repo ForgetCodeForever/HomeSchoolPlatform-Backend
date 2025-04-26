@@ -12,7 +12,8 @@ public enum SuccessHttpMessageEnum {
     ADD("添加成功"),
     DEL("删除成功"),
     EDIT("编辑成功"),
-    QUERY("查询成功");
+    QUERY("查询成功"),
+    ADVISE("建议成功");
 
     final String msg;
 
