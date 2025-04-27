@@ -330,15 +330,18 @@ create table activity_info (
 /**
   13.家长建议表
  */
+# ALTER TABLE parent_advice
+# ADD COLUMN advice_title VARCHAR(255) DEFAULT '';
 create table parent_advice (
-    advice_id         bigint(20)    not null auto_increment    comment '建议id',
-    parent_id         bigint(20)    not null                   comment '家长id',
-    advice_content    longtext      not null                   comment '建议内容',
-    admin_id          bigint(20)    default 0                  comment '管理员id',
-    advice_time       datetime      not null                   comment '建议时间',
-    reply_content     longtext      default null               comment '回复',
-    reply_time        datetime      default null               comment '回复时间',
-    status            char(1)       default '0'                comment '建议状态 0->待处理 1->已处理 2->不合法',
+    advice_id         bigint(20)      not null auto_increment    comment '建议id',
+    parent_id         bigint(20)      not null                   comment '家长id',
+    advice_title      varchar(255)    not null                   comment '建议标题',
+    advice_content    longtext        not null                   comment '建议内容',
+    admin_id          bigint(20)      not null                   comment '管理员id',
+    advice_time       datetime        not null                   comment '建议时间',
+    reply_content     longtext        default null               comment '回复',
+    reply_time        datetime        default null               comment '回复时间',
+    status            char(1)         default '0'                comment '建议状态 0->待处理 1->已处理 2->不合法',
     primary key (advice_id)
 ) engine=innodb comment = '家长建议表';
 

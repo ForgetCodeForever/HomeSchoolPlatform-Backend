@@ -24,4 +24,8 @@ public class SystemConstants {
     public static final String STUDENT_NAME = "studentName";
     public static final String MAJOR_FULL_NAME = "majorFullName";
     public static final String STUDENT_CLASS = "studentClass";
+
+    public static final String DB_PENDING = "0";
+    public static final String DB_HANDLED = "1";
+    public static final String DB_ILLEGAL = "2";
 }

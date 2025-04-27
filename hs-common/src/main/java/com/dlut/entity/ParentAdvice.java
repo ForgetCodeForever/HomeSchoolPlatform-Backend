@@ -20,6 +20,9 @@ public class ParentAdvice {
     
     /** 家长id */
     private Long parentId;
+
+    /** 建议标题 */
+    private String adviceTitle;
     
     /** 建议内容 */
     private String adviceContent;
