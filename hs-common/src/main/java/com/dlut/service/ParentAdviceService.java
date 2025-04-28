@@ -11,4 +11,6 @@ public interface ParentAdviceService extends IService<ParentAdvice> {
     ResponseResult<?> getAdviceList();
 
     ResponseResult<?> replyAdvice(ParentAdvice parentAdvice);
+
+    ResponseResult<?> getParentAdviceList();
 }

@@ -4,10 +4,7 @@ import com.dlut.ResponseResult;
 import com.dlut.entity.ParentAdvice;
 import com.dlut.service.ParentAdviceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/advice")
@@ -19,5 +16,10 @@ public class AdviceController {
     @PostMapping
     public ResponseResult<?> addAdvice(@RequestBody ParentAdvice parentAdvice) {
         return parentAdviceService.addAdvice(parentAdvice);
+    }
+
+    @GetMapping
+    public ResponseResult<?> getAdviceList() {
+        return parentAdviceService.getParentAdviceList();
     }
 }

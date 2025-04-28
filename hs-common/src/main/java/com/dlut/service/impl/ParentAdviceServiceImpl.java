@@ -62,4 +62,13 @@ public class ParentAdviceServiceImpl extends ServiceImpl<ParentAdviceMapper, Par
         parentAdviceMapper.updateById(dbAdvice);
         return ResponseResult.okResult(SystemConstants.SUCCESS, SuccessHttpMessageEnum.REPLY.getMsg());
     }
+
+    @Override
+    public ResponseResult<?> getParentAdviceList() {
+        Long parentId = ParentThreadLocalUtil.getUser().getParentId();
+        LambdaQueryWrapper<ParentAdvice> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ParentAdvice::getParentId, parentId);
+        List<ParentAdvice> parentAdvices = parentAdviceMapper.selectList(queryWrapper);
+        return ResponseResult.okResult(parentAdvices);
+    }
 }
